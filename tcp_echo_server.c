@@ -26,34 +26,27 @@ int main(int argc, char **argv){
 
         serv_sock=socket(PF_INET, SOCK_STREAM, 0);
         if(serv_sock == -1)
-        error_handling("UDP 소켓 생성 오류");
+        error_handling("TCP 소켓 생성 오류");
         memset(&serv_addr, 0, sizeof(serv_addr));
         serv_addr.sin_family=AF_INET;
         serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
         serv_addr.sin_port=htons(atoi(argv[1]));
 
         if(bind(serv_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr))==-1)
-                        error_handling("bind() error");
-
+                error_handling("bind() error");
 
         sleep(5);
 
+        listen(serv_sock,5);
+        clnt_addr_size=sizeof(clnt_addr);
+        new_fd = accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
 
-
-                listen(serv_sock,5);
-                sin_size = sizeof(clnt_addr);
-
-
-
-                clnt_addr_size=sizeof(clnt_addr);
         while(1){
-
-                new_fd = accept(serv_sock,(struct sockaddr*)&clnt_addr,&sin_size);
                 sleep(1);
-                str_len = read(new_fd, message, BUFSIZE,0);
+                str_len = read(new_fd, message, BUFSIZE);
                 printf("수신 번호 : %d \n", num++);
                 printf("%s\n",message);
-                write(serv_sock, message, BUFSIZE, 0);
+                write(new_fd, message, str_len);
         }
 
         return 0;
