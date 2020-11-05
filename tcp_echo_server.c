@@ -6,7 +6,7 @@
 #include<arpa/inet.h>
 #include<stdlib.h>
 
-#define BUFSIZE 30
+#define BUFSIZE 5
 void error_handling(char *message);
 
 int main(int argc, char **argv){
@@ -26,7 +26,7 @@ int main(int argc, char **argv){
 
         serv_sock=socket(PF_INET, SOCK_STREAM, 0);
         if(serv_sock == -1)
-        error_handling("TCP 소켓 생성 오류");
+                error_handling("TCP 소켓 생성 오류");
         memset(&serv_addr, 0, sizeof(serv_addr));
         serv_addr.sin_family=AF_INET;
         serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
@@ -38,12 +38,17 @@ int main(int argc, char **argv){
         sleep(5);
 
         listen(serv_sock,5);
-        clnt_addr_size=sizeof(clnt_addr);
-        new_fd = accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
+
+
 
         while(1){
+
+                clnt_addr_size=sizeof(clnt_addr);
+
+                new_fd = accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
                 sleep(1);
-                str_len = read(new_fd, message, BUFSIZE);
+                str_len = read(serv_sock, message, BUFSIZE);
+                message[str_len]=0;
                 printf("수신 번호 : %d \n", num++);
                 printf("%s\n",message);
                 write(new_fd, message, str_len);
