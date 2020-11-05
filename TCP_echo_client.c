@@ -13,9 +13,9 @@ int main(int argc, char **argv){
     int sock;
     char message[BUFSIZE];
     int str_len, addr_size, i;
-    char MSG1[] = "Hello ";
-    char MSG2[] = "World ";
-    char MSG3[] = "Everybody!";
+    char MSG1[] = "아 좀 됐으면 좋겠습니다 ";
+    char MSG2[] = "제발 ";
+    char MSG3[] = "NETWORKKKKKK!";
     struct sockaddr_in serv_addr;
     struct sockaddr_in from_addr;
 
@@ -35,11 +35,11 @@ int main(int argc, char **argv){
     connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
     write(sock, MSG1, strlen(MSG1));
-    sleep(1);
+    sleep(3);
     write(sock, MSG2, strlen(MSG2));
-    sleep(1);
+    sleep(3);
     write(sock, MSG3, strlen(MSG3));
-    sleep(1);
+    sleep(3);
 
     for(i=0; i<3; i++){
         str_len = read(sock, message, BUFSIZE);

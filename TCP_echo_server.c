@@ -1,4 +1,4 @@
-#define BUFSIZE 30
+#define BUFSIZE 5
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -40,9 +40,9 @@ int main(int argc, char **argv){
     
     while( (str_len=read(new_fd,message, BUFSIZE)) != 0){
         sleep(1);
-        write(new_fd, message, str_len);
         printf("수신 번호 : %d \n", num++);
         printf("%s\n",message);
+        write(new_fd, message, str_len);
         //send(new_fd, message, str_len, 0);
     }
     return 0;
