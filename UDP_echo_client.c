@@ -13,8 +13,8 @@ int main(int argc, char **argv){
     int sock;
     char message[BUFSIZE];
     int str_len, addr_size, i;
-    char MSG1[] = "Good ";
-    char MSG2[] = "Evening ";
+    char MSG1[] = "Hello ";
+    char MSG2[] = "World ";
     char MSG3[] = "Everybody!";
     struct sockaddr_in serv_addr;
     struct sockaddr_in from_addr;
