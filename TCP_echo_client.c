@@ -13,9 +13,10 @@ int main(int argc, char **argv){
     int sock;
     char message[BUFSIZE];
     int str_len, addr_size, i;
-    char MSG1[] = "아 좀 됐으면 좋겠습니다 ";
-    char MSG2[] = "제발 ";
-    char MSG3[] = "NETWORKKKKKK!";
+    char MSG[][BUFSIZE] = {"I hate","Network","TTT"};
+    char MSG1[] = "I hate ";
+    char MSG2[] = "Network ";
+    char MSG3[] = "TTTTTTTTT!";
     struct sockaddr_in serv_addr;
     struct sockaddr_in from_addr;
 
@@ -34,14 +35,9 @@ int main(int argc, char **argv){
 
     connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
-    write(sock, MSG1, strlen(MSG1));
-    sleep(3);
-    write(sock, MSG2, strlen(MSG2));
-    sleep(3);
-    write(sock, MSG3, strlen(MSG3));
-    sleep(3);
-
     for(i=0; i<3; i++){
+        write(sock, MSG[i], strlen(MSG[i]));
+        sleep(1);
         str_len = read(sock, message, BUFSIZE);
         message[str_len]=0;
         printf("서버로부터수신된%d차메시지: %s \n", i, message);
