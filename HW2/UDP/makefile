@@ -1,8 +1,8 @@
 all: UDPclient UDPserver
 
-TCPclient: UDPclient.c
+UDPclient: UDPclient.c
 	gcc -o UDPclient.out UDPclient.c 
-TCPserver: UDPserver.c
+UDPserver: UDPserver.c
 	gcc -o UDPserver.out UDPserver.c 
 
 clean:
