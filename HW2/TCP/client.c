@@ -11,8 +11,8 @@ void error_handling(char *message);
 
 int main(int argc, char **argv){
     int sock;
-    char message[BUFSIZE], filename[BUFSIZE];
-    int str_len, addr_size, i;
+    char filename[BUFSIZE], filebuf[BUFSIZE];
+    int file_len, addr_size, i;
     struct sockaddr_in serv_addr;
     struct sockaddr_in from_addr;
 
@@ -29,14 +29,22 @@ int main(int argc, char **argv){
     serv_addr.sin_addr.s_addr=inet_addr(argv[1]);
     serv_addr.sin_port=htons(atoi(argv[2]));
     strcpy(filename, argv[3]);
-    
+    printf("filename: %s\n",filename);
+    filename[strlen(argv[3])]=0;
     connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
     write(sock, filename, strlen(filename));
     FILE* file = fopen(filename, "r");
+    
     while(1){
+        if(feof(file)) break;
+        file_len = fread(filebuf,sizeof(char),BUFSIZE, file);
+        printf("보내는 데이터:%s\n",filebuf);
         write(sock, file, BUFSIZE);
+        printf("보내기 성공\n");
     }
+    
+    fclose(file);
     close(sock);
     return 0;
 }
