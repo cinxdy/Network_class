@@ -27,9 +27,9 @@ int main(int argc, char **argv){
     }
 
     // Make a socket
-    sock=socket(PF_INET, SOCK_STREAM, 0);
+    sock=socket(PF_INET, SOCK_DGRAM, 0);
     if(sock == -1)
-        error_handling("TCP 소켓생성오류");
+        error_handling("UDP 소켓생성오류");
 
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family=AF_INET;
@@ -38,19 +38,17 @@ int main(int argc, char **argv){
     strcpy(filename, argv[3]);
     printf("filename: %s\n",filename);
 
-    // Connect to socket
-    connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
     // Send the file name
-    write(sock, filename, strlen(filename));
-    
+    sendto(sock, filename, strlen(filename),0,(struct sockaddr*)&serv_addr, sizeof(serv_addr));
+
     // Send the file data
     file = fopen(filename, "rb");
     while(1){
         if(feof(file)) break;
         filebuf_len = fread(filebuf,sizeof(char),BUFSIZE, file);
         printf("보내는 데이터:%s\n",filebuf);
-        write(sock, filebuf, filebuf_len);
+        sendto(sock, filebuf,strlen(filebuf),0,(struct sockaddr*)&serv_addr, filebuf_len);
         printf("보내기 성공\n");
     }
 
