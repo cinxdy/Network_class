@@ -10,11 +10,16 @@
 void error_handling(char *message);
 
 int main(int argc, char **argv){
+    // Variable for socket
     int sock;
-    char filename[BUFSIZE], filebuf[BUFSIZE];
-    int file_len, addr_size, i;
+    int addr_size;
     struct sockaddr_in serv_addr;
     struct sockaddr_in from_addr;
+
+    // Variable for file
+    FILE* file;
+    char filename[BUFSIZE], filebuf[BUFSIZE];
+    int filebuf_len;
 
     if(argc!=4){
         printf("Usage : %s <IP> <port> <file name>\n", argv[0]);
@@ -30,20 +35,24 @@ int main(int argc, char **argv){
     serv_addr.sin_port=htons(atoi(argv[2]));
     strcpy(filename, argv[3]);
     printf("filename: %s\n",filename);
-    filename[strlen(argv[3])]=0;
+
+    // Connect to socket
     connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
+    // Send the file name
     write(sock, filename, strlen(filename));
-    FILE* file = fopen(filename, "rb");
+    file = fopen(filename, "rb");
     
+    // Send the file data
     while(1){
         if(feof(file)) break;
-        file_len = fread(filebuf,sizeof(char),BUFSIZE, file);
+        filebuf_len = fread(filebuf,sizeof(char),BUFSIZE, file);
         printf("보내는 데이터:%s\n",filebuf);
-        write(sock, filebuf, file_len);
+        write(sock, filebuf, filebuf_len);
         printf("보내기 성공\n");
     }
     
+    printf("전송 완료\n");
     fclose(file);
     close(sock);
     return 0;

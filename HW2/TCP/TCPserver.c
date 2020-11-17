@@ -11,20 +11,24 @@ void error_handling(char *message);
 
 int main(int argc, char **argv){
     int serv_sock;
-    char filename[BUFSIZE], filebuf[BUFSIZE] ;
-    int filename_len, num=0, filebuf_len;
     int sin_size;
     int new_fd;
-    FILE* file;
 
     struct sockaddr_in serv_addr;
     struct sockaddr_in clnt_addr;
     int clnt_addr_size;
+
+    // Variable for file
+    FILE* file;
+    char filename[BUFSIZE], filebuf[BUFSIZE];
+    int filename_len, filebuf_len;
+
     if(argc!=2){
             printf("Usage : %s <port>\n", argv[0]);
             exit(1);
     }
 
+    // Make a socket
     serv_sock=socket(PF_INET, SOCK_STREAM, 0);
     if(serv_sock == -1)
         error_handling("TCP 소켓 생성 오류");
@@ -33,30 +37,33 @@ int main(int argc, char **argv){
     serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
     serv_addr.sin_port=htons(atoi(argv[1]));
 
+    // Bind
     if(bind(serv_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr))==-1)
         error_handling("bind() error");
 
+    // Listen and Accept (Three hand shaking)
     listen(serv_sock,5);
     clnt_addr_size=sizeof(clnt_addr);
     new_fd = accept(serv_sock,(struct sockaddr*)&clnt_addr, &clnt_addr_size);
 
+    // Receive the file name
     filename_len = read(new_fd, filename, BUFSIZE);
     filename[filename_len]=0;
-    
-    //strcpy(filename,"hello.txt");
     printf("filename: %s\n",filename);
-    file = fopen(filename, "wb");
-    
 
+    // Save the file
+    file = fopen(filename, "wb");
+
+    // Store the chunked data to the file
     while(1){
         filebuf_len = read(new_fd, filebuf, BUFSIZE);
         if(filebuf_len==0) break;
         filebuf[filebuf_len]=0;
         printf("받은 데이터:%s\n",filebuf);
-        //fwrite("hello world!",sizeof(char),strlen("hello world!"), file);
         fwrite(filebuf, sizeof(char), filebuf_len, file);
         printf("받기 성공\n");
     }
+    printf("전송 완료\n");
     fclose(file);
     close(new_fd);
     return 0;
