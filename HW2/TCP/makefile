@@ -1,9 +1,9 @@
-all: client server
+all: TCPclient TCPserver
 
-client: client.c
-	gcc -o client.out client.c 
-server: server.c
-	gcc -o server.out server.c 
+TCPclient: TCPclient.c
+	gcc -o TCPclient.out TCPclient.c 
+TCPserver: TCPserver.c
+	gcc -o TCPserver.out TCPserver.c 
 
 clean:
-	rm -f client.out server.out
+	rm -f TCPclient.out TCPserver.out
