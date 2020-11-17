@@ -15,7 +15,7 @@ int main(int argc, char **argv){
     int str_len, addr_size, i;
     char MSG1[] = "Hello ";
     char MSG2[] = "World ";
-    char MSG3[] = "Everybody!";
+    char MSG3[] = "Bye";
     struct sockaddr_in serv_addr;
     struct sockaddr_in from_addr;
     if(argc!=3){
@@ -33,6 +33,7 @@ int main(int argc, char **argv){
     sendto(sock, MSG1, strlen(MSG1), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     sendto(sock, MSG2, strlen(MSG2), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     sendto(sock, MSG3, strlen(MSG3), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+    
     for(i=0; i<3; i++){
         addr_size = sizeof(from_addr);
         str_len = recvfrom(sock, message, BUFSIZE, 0, (struct sockaddr*)&from_addr, &addr_size);

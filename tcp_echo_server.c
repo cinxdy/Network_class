@@ -39,14 +39,13 @@ int main(int argc, char **argv){
 
         listen(serv_sock,5);
 
+        clnt_addr_size=sizeof(clnt_addr);
+
+        new_fd = accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
 
 
         while(1){
-
-                clnt_addr_size=sizeof(clnt_addr);
-
-                new_fd = accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
-                sleep(1);
+                sleep(3);
                 str_len = read(serv_sock, message, BUFSIZE);
                 message[str_len]=0;
                 printf("수신 번호 : %d \n", num++);
