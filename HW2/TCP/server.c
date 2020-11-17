@@ -12,7 +12,7 @@ void error_handling(char *message);
 int main(int argc, char **argv){
     int serv_sock;
     char filename[BUFSIZE], filebuf[BUFSIZE] ;
-    int filename_len, num=0, file_len;
+    int filename_len, num=0, filebuf_len;
     int sin_size;
     int new_fd;
     FILE* file;
@@ -43,17 +43,19 @@ int main(int argc, char **argv){
     filename_len = read(new_fd, filename, BUFSIZE);
     filename[filename_len]=0;
     
-    strcpy(filename,"hello.txt");
+    //strcpy(filename,"hello.txt");
     printf("filename: %s\n",filename);
-    file = fopen(filename, "w");
+    file = fopen(filename, "wb");
     
 
     while(1){
-        file_len = read(new_fd, filebuf, BUFSIZE);
+        filebuf_len = read(new_fd, filebuf, BUFSIZE);
+        if(filebuf_len==0) break;
+        filebuf[filebuf_len]=0;
         printf("받은 데이터:%s\n",filebuf);
-        fwrite(file, sizeof(char), file_len, filebuf);
+        //fwrite("hello world!",sizeof(char),strlen("hello world!"), file);
+        fwrite(filebuf, sizeof(char), filebuf_len, file);
         printf("받기 성공\n");
-        if(file_len==0) break;
     }
     fclose(file);
     close(new_fd);

@@ -34,13 +34,13 @@ int main(int argc, char **argv){
     connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
     write(sock, filename, strlen(filename));
-    FILE* file = fopen(filename, "r");
+    FILE* file = fopen(filename, "rb");
     
     while(1){
         if(feof(file)) break;
         file_len = fread(filebuf,sizeof(char),BUFSIZE, file);
         printf("보내는 데이터:%s\n",filebuf);
-        write(sock, file, BUFSIZE);
+        write(sock, filebuf, file_len);
         printf("보내기 성공\n");
     }
     
