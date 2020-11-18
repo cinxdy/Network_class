@@ -64,8 +64,13 @@ int main(int argc, char **argv){
         printf("받기 성공\n");
     }
     printf("전송 완료\n");
+    printf("filename:%s\n", filename);
     fclose(file);
     close(new_fd);
+    
+    printf("===WC result===\n");
+    char wc[BUFSIZE+3]="wc ";
+    system(strcat(wc,filename));
     return 0;
 }
 void error_handling(char *message)
