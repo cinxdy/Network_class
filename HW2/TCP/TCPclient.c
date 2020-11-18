@@ -49,6 +49,7 @@ int main(int argc, char **argv){
     while(1){
         if(feof(file)) break;
         filebuf_len = fread(filebuf,sizeof(char),BUFSIZE, file);
+        filebuf[filebuf_len]=0;
         printf("보내는 데이터:%s\n",filebuf);
         write(sock, filebuf, filebuf_len);
         printf("보내기 성공\n");
