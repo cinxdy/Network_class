@@ -55,6 +55,10 @@ int main(int argc, char **argv){
     printf("전송 완료\n");
     fclose(file);
     close(sock);
+
+    printf("===WC result===\n");
+    char wc[BUFSIZE+3]="wc ";
+    system(strcat(wc,filename));
     return 0;
 }
 

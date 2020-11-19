@@ -61,6 +61,10 @@ int main(int argc, char **argv){
     }
     fclose(file);
     close(serv_sock);
+    
+    printf("===WC result===\n");
+    char wc[BUFSIZE+3]="wc ";
+    system(strcat(wc,filename));
     return 0;
 }
 void error_handling(char *message)
