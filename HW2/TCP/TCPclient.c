@@ -41,11 +41,14 @@ int main(int argc, char **argv){
     // Connect to socket
     connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
-    // Send the file name
-    send(sock, filename, strlen(filename), 0);
     
     // Send the file data
     file = fopen(filename, "rb");
+
+    // Send the file name
+    strcat(filename,"\n");
+    send(sock, filename, strlen(filename), 0);
+
     while(1){
         if(feof(file)) break;
         filebuf_len = fread(filebuf,sizeof(char),BUFSIZE, file);
@@ -54,7 +57,6 @@ int main(int argc, char **argv){
         send(sock, filebuf, filebuf_len, 0);
         printf("보내기 성공\n");
     }
-
     printf("전송 완료\n");
     printf("filename:%s\n", filename);
     fclose(file);
