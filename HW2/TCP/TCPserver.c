@@ -47,13 +47,16 @@ int main(int argc, char **argv){
     new_fd = accept(serv_sock,(struct sockaddr*)&clnt_addr, &clnt_addr_size);
 
     // Receive the file name
-    filename_len = recv(new_fd, filename, BUFSIZE, 0);
+    recv(new_fd,filename,BUFSIZE,MSG_PEEK);
+    char * ptr = strtok(filename,"\n");
+    filename_len = strlen(ptr);
+
+    recv(new_fd, filename, filename_len+1, 0);
     filename[filename_len]=0;
     printf("filename: %s\n",filename);
 
     // Save the file
     file = fopen(filename, "wb");
-    close(new_fd);
 
     //Store the chunked data to the file
     while(1){
