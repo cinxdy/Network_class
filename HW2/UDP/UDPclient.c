@@ -38,7 +38,6 @@ int main(int argc, char **argv){
     strcpy(filename, argv[3]);
     printf("filename: %s\n",filename);
 
-
     // Send the file name
     sendto(sock, filename, strlen(filename),0,(struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
@@ -52,6 +51,7 @@ int main(int argc, char **argv){
         sendto(sock, filebuf, strlen(filebuf),0,(struct sockaddr*)&serv_addr, sizeof(serv_addr));
         printf("보내기 성공\n");
     }
+    sendto(sock, NULL, 0 ,0,(struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
     printf("전송 완료\n");
     fclose(file);

@@ -58,13 +58,12 @@ int main(int argc, char **argv){
 
     // Store the chunked data to the file
     while(1){
-        clnt_addr_size = sizeof(clnt_addr);
-        filebuf_len = recvfrom(serv_sock, filebuf, BUFSIZE, 0,(struct sockaddr*)&clnt_addr, &clnt_addr_size);
+        filebuf_len = recvfrom(serv_sock, filebuf, BUFSIZE, 0,(struct sockaddr*)&clnt_addr, sizeof(clnt_addr));
+        if(filebuf_len<0) break;
         filebuf[filebuf_len]=0;
         printf("받은 데이터:%s\n",filebuf);
         fwrite(filebuf, sizeof(char), filebuf_len, file);
         printf("받기 성공\n");
-        //if(filebuf_len==0) break;
     }
     fclose(file);
     close(serv_sock);
