@@ -46,6 +46,7 @@ int main(int argc, char **argv){
     file = fopen(filename, "rb");
     while(1){
         if(feof(file)) break;
+        sleep(3);
         filebuf_len = fread(filebuf,sizeof(char),BUFSIZE, file);
         printf("보내는 데이터:%s\n",filebuf);
         sendto(sock, filebuf, strlen(filebuf),0,(struct sockaddr*)&serv_addr, sizeof(serv_addr));

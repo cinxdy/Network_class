@@ -10,7 +10,7 @@
 void error_handling(char *message);
 
 int main(int argc, char **argv){
-
+    // Variable for socket
     int serv_sock;
     int sin_size;
     int new_fd;
@@ -43,8 +43,13 @@ int main(int argc, char **argv){
         error_handling("bind() error");
 
     // Receive the file name
-    clnt_addr_size=sizeof(clnt_addr);
-    filename_len = recvfrom(serv_sock, filename, BUFSIZE, 0, (struct sockaddr*) &clnt_addr, &clnt_addr_size);
+    long file_size;
+    int totalBufferNum;
+    int BufferNum;
+
+    // Store the chunked data to the file
+    filename_len = recvfrom(serv_sock, filename, BUFSIZE, MSG_PEEK, (struct sockaddr*) &clnt_addr, &clnt_addr_size);
+    recvfrom(serv_sock, filename, filename_len+1, 0, (struct sockaddr*) &clnt_addr, &clnt_addr_size);
     filename[filename_len]=0;
     printf("filename: %s\n",filename);
 
@@ -53,11 +58,13 @@ int main(int argc, char **argv){
 
     // Store the chunked data to the file
     while(1){
+        clnt_addr_size = sizeof(clnt_addr);
         filebuf_len = recvfrom(serv_sock, filebuf, BUFSIZE, 0,(struct sockaddr*)&clnt_addr, &clnt_addr_size);
         filebuf[filebuf_len]=0;
         printf("받은 데이터:%s\n",filebuf);
         fwrite(filebuf, sizeof(char), filebuf_len, file);
         printf("받기 성공\n");
+        //if(filebuf_len==0) break;
     }
     fclose(file);
     close(serv_sock);
@@ -67,6 +74,7 @@ int main(int argc, char **argv){
     system(strcat(wc,filename));
     return 0;
 }
+
 void error_handling(char *message)
 {
         fputs(message, stderr);
